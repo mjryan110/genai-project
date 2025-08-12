@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "cbre-neo4j-genai"
+version = "0.1.0"
+description = "CBRE Neo4j Agentic RAG API - Real Estate Knowledge Graph"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pandas = "^2.1.0"
+numpy = "^1.26.0"
+google-auth = "^2.20.0"
+google-cloud-aiplatform = "^1.48.0"
+google-cloud-bigquery = "^3.15.0"
+pymupdf = "^1.22.0"
+notebook = "^7.0.0"
+ipykernel = "^6.25.0"
+python-dotenv = "^1.0.1"
+openai = "^1.2.3"
+neo4j-graphrag = "^1.5.0"
+ragas = "0.2.14"
+pydantic = "2.10.6"
+nbclassic = "^1.2.0"
+jupyter = "^1.1.1"
+retry = "^0.9.2"
+langchain = "^0.3.21"
+langchain-text-splitters = "^0.3.7"
+neo4j = "^5.2.0"
+gradio = "^3.50.0"
+langchain-google-genai = "^2.1.2"
+langchain-community = "^0.3.20"
+langgraph = "^0.3.21"
+langchain-core = "^0.3.55"
+fastapi = "^0.115.12"
+langchain-openai = "^0.3.14"
+email-validator = "^2.2.0"
+streamlit = "^1.44.1"
+PyMuPDF = "^1.26.0"
+langchain-experimental = "^0.3.2"
+openpyxl = "^3.1.5"
+PyYAML = "^6.0.1"
+
+
+huggingface-hub = "^0.21.4"
+tiktoken = "^0.9.0"
+httpx = "^0.27.0"
+ollama = "^0.1.7"
+torch = "2.2.2"
+sentence-transformers = "2.2.2"
+
+
+
+
+
+[tool.poetry.scripts]
+etl = "graph_build.main:main"
+
+[[tool.poetry.packages]]
+include = "graph_build"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,111 @@
+# CBRE Real Estate Query Examples
+# These examples help the LLM understand how to convert natural language to Cypher queries
+
+query_examples:
+  - input: "Show me all office properties in downtown areas"
+    output: |
+      MATCH (p:Property)
+      WHERE p.property_type = 'Office' AND p.location CONTAINS 'downtown'
+      RETURN p.name, p.address, p.property_type, p.location
+      LIMIT 10
+
+  - input: "What are the vacancy rates for retail properties in shopping centers?"
+    output: |
+      MATCH (p:Property)-[:HAS_VACANCY]->(v:Vacancy)
+      WHERE p.property_type = 'Retail' AND p.location CONTAINS 'shopping center'
+      RETURN p.name, p.address, v.vacancy_rate, v.last_updated
+      ORDER BY v.vacancy_rate DESC
+
+  - input: "Find industrial properties with more than 50,000 square feet"
+    output: |
+      MATCH (p:Property)
+      WHERE p.property_type = 'Industrial' AND p.square_feet > 50000
+      RETURN p.name, p.address, p.square_feet, p.property_type
+      ORDER BY p.square_feet DESC
+
+  - input: "Show me properties with cap rates above 6%"
+    output: |
+      MATCH (p:Property)-[:HAS_FINANCIAL]->(f:Financial)
+      WHERE f.cap_rate > 6.0
+      RETURN p.name, p.address, f.cap_rate, p.property_type
+      ORDER BY f.cap_rate DESC
+
+  - input: "List all properties managed by CBRE in New York"
+    output: |
+      MATCH (p:Property)-[:MANAGED_BY]->(m:Management)
+      WHERE m.manager = 'CBRE' AND p.city = 'New York'
+      RETURN p.name, p.address, m.manager, p.property_type
+
+  - input: "What are the rental rates for office spaces in Class A buildings?"
+    output: |
+      MATCH (p:Property)-[:HAS_RENTAL]->(r:Rental)
+      WHERE p.property_type = 'Office' AND p.building_class = 'A'
+      RETURN p.name, p.address, r.rental_rate, r.rate_type
+      ORDER BY r.rental_rate DESC
+
+  - input: "Find properties that have been on the market for more than 90 days"
+    output: |
+      MATCH (p:Property)-[:HAS_LISTING]->(l:Listing)
+      WHERE l.days_on_market > 90
+      RETURN p.name, p.address, l.days_on_market, p.property_type
+      ORDER BY l.days_on_market DESC
+
+  - input: "Show me properties with recent lease renewals"
+    output: |
+      MATCH (p:Property)-[:HAS_LEASE]->(lease:Lease)
+      WHERE lease.renewal_date >= date() - duration('P30D')
+      RETURN p.name, p.address, lease.renewal_date, lease.tenant_name
+
+  - input: "What are the property values in the financial district?"
+    output: |
+      MATCH (p:Property)-[:HAS_VALUATION]->(v:Valuation)
+      WHERE p.location CONTAINS 'financial district'
+      RETURN p.name, p.address, v.current_value, v.last_appraisal_date
+      ORDER BY v.current_value DESC
+
+  - input: "Find properties with parking facilities"
+    output: |
+      MATCH (p:Property)-[:HAS_AMENITY]->(a:Amenity)
+      WHERE a.amenity_type = 'Parking'
+      RETURN p.name, p.address, a.amenity_type, a.capacity
+
+  - input: "Show me properties with energy efficiency ratings above 80"
+    output: |
+      MATCH (p:Property)-[:HAS_CERTIFICATION]->(c:Certification)
+      WHERE c.certification_type = 'Energy Efficiency' AND c.rating > 80
+      RETURN p.name, p.address, c.rating, c.certification_type
+      ORDER BY c.rating DESC
+
+  - input: "List properties with recent maintenance activities"
+    output: |
+      MATCH (p:Property)-[:HAS_MAINTENANCE]->(m:Maintenance)
+      WHERE m.maintenance_date >= date() - duration('P7D')
+      RETURN p.name, p.address, m.maintenance_type, m.maintenance_date
+
+  - input: "Find properties near public transportation"
+    output: |
+      MATCH (p:Property)-[:NEAR_TRANSPORT]->(t:Transportation)
+      RETURN p.name, p.address, t.transport_type, t.distance_meters
+      ORDER BY t.distance_meters ASC
+
+  - input: "What are the property taxes for commercial buildings?"
+    output: |
+      MATCH (p:Property)-[:HAS_TAX]->(tax:Tax)
+      WHERE p.property_type IN ['Office', 'Retail', 'Industrial']
+      RETURN p.name, p.address, tax.annual_tax, tax.tax_year
+      ORDER BY tax.annual_tax DESC
+
+  - input: "Show me properties with multiple tenants"
+    output: |
+      MATCH (p:Property)-[:HAS_TENANT]->(tenant:Tenant)
+      WITH p, count(tenant) as tenant_count
+      WHERE tenant_count > 1
+      RETURN p.name, p.address, tenant_count
+      ORDER BY tenant_count DESC
+
+  - input: "Find properties with upcoming lease expirations"
+    output: |
+      MATCH (p:Property)-[:HAS_LEASE]->(lease:Lease)
+      WHERE lease.expiration_date <= date() + duration('P90D')
+      RETURN p.name, p.address, lease.expiration_date, lease.tenant_name
+      ORDER BY lease.expiration_date ASC 
